@@ -1,0 +1,59 @@
+plugins {
+  id "com.github.node-gradle.node" version "3.0.1"
+}
+
+node {
+    download = false
+}
+
+npmInstall {
+
+    outputs.cacheIf { true }
+
+    inputs.files("package.json")
+        .withPropertyName("packageJson")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    outputs.dir("${project.rootDir}/node_modules/")
+        .withPropertyName("nodeModules")
+    outputs.file("${project.rootDir}/package-lock.json")
+        .withPropertyName("packageLockJson")
+}
+
+task npmLint(type: NpmTask) {
+    args = ['run', 'ci:lint']
+
+    outputs.cacheIf { true }
+
+    inputs.dir(file("app"))
+        .withPropertyName("appFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    inputs.files("package.json", "package-lock.json", ".eslintrc")
+        .withPropertyName("configFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    outputs.file("eslint.xml")
+        .withPropertyName("eslintXml")
+
+}
+
+task npmTest(type: NpmTask) {
+    args = ['run', 'ci:test']
+
+    outputs.cacheIf { true }
+
+    inputs.dir(file("app"))
+        .withPropertyName("appFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    inputs.files("package.json", "package-lock.json")
+        .withPropertyName("configFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    outputs.dir("${project.rootDir}/coverage/")
+        .withPropertyName("coverageFiles")
+
+    outputs.file("${project.rootDir}/junit.xml")
+        .withPropertyName("junitXml")
+}

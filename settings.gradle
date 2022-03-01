@@ -1,0 +1,12 @@
+boolean isCiServer = System.getenv().containsKey("CI")
+buildCache {
+    remote(HttpBuildCache) {
+        push = isCiServer
+        url = 'http://build-cache-node.build-cache:5071/cache/'
+        allowInsecureProtocol = true
+        credentials {
+            username = 'ci-user'
+            password = 'testMe1!'
+        }
+    }
+}
