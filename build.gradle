@@ -30,6 +30,24 @@ task npmLint(type: NpmTask, dependsOn: npmInstall) {
 
 }
 
+task npmLintNoDep(type: NpmTask) {
+    args = ['run', 'ci:lint-no-dep']
+
+    outputs.cacheIf { true }
+
+    inputs.dir(file("app"))
+        .withPropertyName("appFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    inputs.files("package.json", "package-lock.json", ".eslintrc")
+        .withPropertyName("configFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    outputs.file("eslint.xml")
+        .withPropertyName("eslintXml")
+
+}
+
 task npmCoverage(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'ci:coverage']
 
