@@ -15,6 +15,7 @@
     "lint": "eslint app/*.js e2e_tests/*.js",
     "ci:lint": "npx eslint -f junit \"./{app,e2e_tests}/**/*.{js,jsx}\" > eslint.xml",
     "ci:test": "npx jest --ci --reporters=default --reporters=jest-junit",
+    "ci:coverage": "jest --coverage app/__tests__/*.test.js",
     "prettier": "prettier --write app/*.js app/__{tests,mocks}__/*.js e2e_tests/*.js"
   },
   "dependencies": {

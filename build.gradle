@@ -30,8 +30,8 @@ task npmLint(type: NpmTask, dependsOn: npmInstall) {
 
 }
 
-task npmTest(type: NpmTask, dependsOn: npmInstall) {
-    args = ['run', 'ci:test']
+task npmCoverage(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'ci:coverage']
 
     outputs.cacheIf { true }
 
@@ -43,8 +43,27 @@ task npmTest(type: NpmTask, dependsOn: npmInstall) {
         .withPropertyName("configFiles")
         .withPathSensitivity(PathSensitivity.RELATIVE)
 
-    outputs.dir("${project.rootDir}/coverage/")
+    outputs.dir("coverage")
         .withPropertyName("coverageFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+task npmTest(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'ci:test']
+
+    outputs.cacheIf { true }
+
+    inputs.dir(file("app"))
+        .withPropertyName("appFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    inputs.dir(file("e2e_tests"))
+        .withPropertyName("e2eFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+
+    inputs.files("package.json", "package-lock.json")
+        .withPropertyName("configFiles")
+        .withPathSensitivity(PathSensitivity.RELATIVE)
 
     outputs.file("${project.rootDir}/junit.xml")
         .withPropertyName("junitXml")
