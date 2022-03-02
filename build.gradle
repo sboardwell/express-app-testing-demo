@@ -4,23 +4,15 @@ plugins {
 
 node {
     download = false
+    npmInstallCommand = "ci"
 }
 
 npmInstall {
-
+    args = ["--prefer-offline", "--no-audit"]
     outputs.cacheIf { true }
-
-    inputs.files("package.json")
-        .withPropertyName("packageJson")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
-
-    outputs.dir("${project.rootDir}/node_modules/")
-        .withPropertyName("nodeModules")
-    outputs.file("${project.rootDir}/package-lock.json")
-        .withPropertyName("packageLockJson")
 }
 
-task npmLint(type: NpmTask) {
+task npmLint(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'ci:lint']
 
     outputs.cacheIf { true }
@@ -38,7 +30,7 @@ task npmLint(type: NpmTask) {
 
 }
 
-task npmTest(type: NpmTask) {
+task npmTest(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'ci:test']
 
     outputs.cacheIf { true }
