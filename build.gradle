@@ -45,7 +45,6 @@ task npmCoverage(type: NpmTask, dependsOn: npmInstall) {
 
     outputs.dir("coverage")
         .withPropertyName("coverageFiles")
-        .withPathSensitivity(PathSensitivity.RELATIVE)
 }
 
 task npmTest(type: NpmTask, dependsOn: npmInstall) {
